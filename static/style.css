@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0
+}
+
+html,body {
+  height: 100%
+}
+
+.outer-wrap {
+    height: 100%;    
+    position: relative;
+}
+
+#center {
+    width: 400px;
+    height: 380px;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-top: 220px;
+    margin-left: -200px;
+}
+
+.center {
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+}
+
+ .right-btn {
+  float: right;
+}
+
+.vertical-align-btn {
+  margin-top: 17px;
+}
+
+.equal-width-table {
+  table-layout: fixed;
+  text-align: center;
+}

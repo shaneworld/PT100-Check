@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    search
+{% endblock %}
+
+{% block main %}
+    <form action="/" method="post">
+
+      <div class="container w-25 p-3">
+        <div class="row g-3 align-items-center">
+          <div class="input-group mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="resistance" placeholder="电阻" type="text" value="{% if res %}{{res}}{% endif %}">
+            <span class="input-group-text">&nbsp;Ω&nbsp;</span>
+            <button class="btn btn-primary" type="submit" name="search_temp">查询</button>
+          </div>
+
+          <div class="input-group mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="temperature" placeholder="温度" type="text" value="{% if temp %}{{temp}}{% endif %}">
+            <span class="input-group-text">°C</span>
+            <button class="btn btn-primary" type="submit" name="search_res">查询</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+    
+{% endblock %}
+
