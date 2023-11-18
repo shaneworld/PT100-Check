@@ -14,7 +14,7 @@ def create_database():
         cursor = conn.cursor()
         # Create the database if it doesn't exsit
         cursor.execute('CREATE TABLE IF NOT EXISTS resistance_temperature (temperature REAL PRIMARY KEY, resistance REAL)')
-        cursor.execute('CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, temperature REAL, resistance REAL)')
+        cursor.execute('CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, temperature REAL, resistance REAL)')
         metadata = [(-200.0, 18.52), (-190.0, 22.83), (-180.0, 27.10), (-170.0, 31.34), 
                     (-160.0, 35.54), (-150.0, 39.72), (-140.0, 43.88), (-130.0, 48.0), 
                     (-120.0, 52.11), (-110, 56.19),(-100.0, 60.25), (-90.0, 64.3), 
@@ -83,7 +83,7 @@ def search():
                     if less and more:
                         k = (more[0][0] - less[0][0]) / 10
                         b = more[0][0] - k * more[0][1]
-                        result_temp = (result_res - b) / k
+                        result_temp = round((result_res - b) / k, 2)
 
                 # Insert into history
                 cursor.execute('INSERT INTO history (temperature, resistance) VALUES (?, ?)', (result_temp, result_res))
@@ -121,7 +121,7 @@ def search():
                     if less and more:
                         k = (more[0][1] - less[0][1]) / 10
                         b = more[0][1] - (k * more[0][0])
-                        result_res = (k * result_temp) + b
+                        result_res = round((k * result_temp) + b, 2)
 
                 # Insert into history
                 cursor.execute('INSERT INTO history (temperature, resistance) VALUES (?, ?)', (result_temp, result_res))
@@ -140,7 +140,7 @@ def history():
             conn.commit()
             return render_template("history.html")
         else:
-            cursor.execute('SELECT id, timestamp, temperature, resistance FROM history')
+            cursor.execute('SELECT id, temperature, resistance FROM history')
             hist = cursor.fetchall()
             return render_template("history.html", history = hist)
 
