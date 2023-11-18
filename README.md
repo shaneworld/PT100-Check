@@ -20,17 +20,20 @@ python3 app.py
 在浏览器中打开`http://localhost:5000`
 
 ## TODO
-[x] 前端交互待完善，适应不同尺寸设备，目前在仅在电脑端体验最佳。
-[ ] 目前每个人的查找历史都是公开可见的，没有实现数据库隔离。
-[ ] 数据库采用sqlite3，只能处理小规模数据。
-[ ] 程序结构待优化。
+- [x] 前端交互待完善，适应不同尺寸设备，目前在仅在电脑端体验最佳。
+- [ ] 目前每个人的查找历史都是公开可见的，没有实现数据库隔离。
+- [ ] 数据库采用sqlite3，只能处理小规模数据。
+- [ ] 程序结构待优化。
 
 ## 应用截图
+
+### 手机端
 <div style="display:inline-block" align=center>
   <img src="./asserts/5.jpg" alt="image1" width="40%">
   <img src="./asserts/6.jpg" alt="image2" width="40%">
 </div>
 
+### 电脑端
 ![1](./asserts/1.1.png)
 ![2](./asserts/2.2.png)
 ![3](./asserts/3.3.png)
