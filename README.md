@@ -1,6 +1,6 @@
 # 铂热电阻温度与电阻互查
 
-简单实现铂热电阻温度与电阻互查。仅作学习用途。`PT100` 分度表[参考此链接](https://file.yizimg.com/175986/200748132954625201334.pdf)。
+简单实现铂热电阻温度与电阻互查。仅作学习用途。`PT100` 分度表[参考此链接](https://itsirl.com/images/references/datasheets/1407280925pt100din.pdf)。
 
 网站地址：http://shane0304.pythonanywhere.com/
 
