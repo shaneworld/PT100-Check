@@ -66,7 +66,7 @@ def search():
                     flash('请输入有效数据！', 'error')
                     return render_template("inquire.html")
                 # Input out of range
-                if result_res > 326.48 or result_res < 18.52:
+                if result_res > 390.2623 or result_res < 18.4932:
                     flash('电阻值超出范围！', 'error')
                     return render_template("inquire.html")
 
@@ -74,7 +74,7 @@ def search():
                 cursor.execute('SELECT temperature FROM resistance_temperature WHERE resistance = ?', (result_res,))
                 equal = cursor.fetchone()
                 if equal:
-                    result_temp = equal[0]
+                    result_temp = round(equal[0], 3)
                 else:
                     # Get the resistance < res
                     cursor.execute('SELECT resistance, temperature FROM resistance_temperature WHERE resistance < ? ORDER BY resistance DESC LIMIT 1', (result_res,))
@@ -86,7 +86,7 @@ def search():
                     if less and more:
                         k = (more[0][0] - less[0][0]) / 10
                         b = more[0][0] - k * more[0][1]
-                        result_temp = round((result_res - b) / k, 2)
+                        result_temp = round((result_res - b) / k, 3)
 
                 # Insert into history
                 cursor.execute('INSERT INTO history (temperature, resistance) VALUES (?, ?)', (result_temp, result_res))
@@ -104,7 +104,7 @@ def search():
                     flash('请输入有效数据！', 'error')
                     return render_template("inquire.html")
                 # Input out of range
-                if result_temp > 660.0 or result_temp < -200.0:
+                if result_temp > 850.0 or result_temp < -200.0:
                     flash('温度超出范围！', 'error')
                     return render_template("inquire.html")
 
@@ -112,7 +112,7 @@ def search():
                 cursor.execute('SELECT resistance FROM resistance_temperature WHERE temperature = ?', (result_temp,))
                 equal = cursor.fetchone()
                 if equal:
-                    result_res = equal[0]
+                    result_res = round(equal[0], 3)
                 else:
                     # Get the temperature < temp
                     cursor.execute('SELECT temperature, resistance FROM resistance_temperature WHERE temperature < ? ORDER BY temperature DESC LIMIT 1', (result_temp,))
@@ -124,7 +124,7 @@ def search():
                     if less and more:
                         k = (more[0][1] - less[0][1]) / 10
                         b = more[0][1] - (k * more[0][0])
-                        result_res = round((k * result_temp) + b, 2)
+                        result_res = round((k * result_temp) + b, 3)
 
                 # Insert into history
                 cursor.execute('INSERT INTO history (temperature, resistance) VALUES (?, ?)', (result_temp, result_res))
