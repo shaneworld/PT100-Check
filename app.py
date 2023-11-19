@@ -1,11 +1,11 @@
 from flask import Flask
-from flask import render_template, request, flash, redirect
+from flask import render_template, request, flash, redirect, session
 import sqlite3, os
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'hafldshewCeufocbwefcaslvadsha'
 
 app.config['DATABASE'] = 'database.db'
-app.config['SECRET_KEY'] = 'ewfwef35sshjkl'
 
 # Create a database for history and metadata
 def create_database():
@@ -14,7 +14,6 @@ def create_database():
             cursor = conn.cursor()
             # Create the database if it doesn't exsit
             cursor.execute('CREATE TABLE IF NOT EXISTS resistance_temperature (temperature REAL PRIMARY KEY, resistance REAL)')
-            cursor.execute('CREATE TABLE IF NOT EXISTS history (id INTEGER PRIMARY KEY AUTOINCREMENT, temperature REAL, resistance REAL)')
             metadata = [(-200.0, 18.4932), (-190.0, 22.8031), (-180.0, 27.0779), (-170.0, 31.3200), 
                         (-160.0, 35.5313), (-150.0, 39.7137), (-140.0, 43.8691), (-130.0, 47.9993), 
                         (-120.0, 52.1058), (-110, 56.1903),(-100.0, 60.2541), (-90.0, 64.2987), 
@@ -40,6 +39,9 @@ def create_database():
                         (850.0, 390.2623)]
             cursor.executemany('INSERT INTO resistance_temperature (temperature, resistance) VALUES (?, ?)', metadata)
             conn.commit()
+
+# Initialize database
+create_database()
 
 @app.route("/", methods = ["GET", "POST"])
 def search():
@@ -88,9 +90,7 @@ def search():
                         b = more[0][0] - k * more[0][1]
                         result_temp = round((result_res - b) / k, 3)
 
-                # Insert into history
-                cursor.execute('INSERT INTO history (temperature, resistance) VALUES (?, ?)', (result_temp, result_res))
-                conn.commit()
+                session[str(result_res)] = str(result_temp)
 
             # Handle search resistance
             if "search_res" in request.form:
@@ -125,38 +125,25 @@ def search():
                         k = (more[0][1] - less[0][1]) / 10
                         b = more[0][1] - (k * more[0][0])
                         result_res = round((k * result_temp) + b, 3)
-
-                # Insert into history
-                cursor.execute('INSERT INTO history (temperature, resistance) VALUES (?, ?)', (result_temp, result_res))
-                conn.commit()
+                
+                session[str(result_res)] = str(result_temp)
 
         return render_template("inquire.html", temp = result_temp, res = result_res)
     return render_template("inquire.html")
 
 @app.route("/history", methods=["GET", "POST"])
 def history():
-    with sqlite3.connect(app.config['DATABASE']) as conn:
-        cursor = conn.cursor()
-        # Clear all history
-        if request.method == "POST":
-            cursor.execute('DELETE FROM history')
-            conn.commit()
-            return render_template("history.html")
-        else:
-            cursor.execute('SELECT id, temperature, resistance FROM history')
-            hist = cursor.fetchall()
-            return render_template("history.html", history = hist)
+    # Clear all history
+    if request.method == "POST":
+        session.clear()
+        return render_template("history.html")
+    else:
+        return render_template("history.html", history = session)
 
-@app.route('/delhistory/<int:id>')
-def delhistory(id):
+@app.route('/delhistory/<string:key>')
+def delhistory(key):
     # Delete history
-    with sqlite3.connect(app.config['DATABASE']) as conn:
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM history WHERE id = ?', (id,))
-        conn.commit()
+    session.pop(key, None)
     return redirect('/history')
 
 
-if __name__ == "__main__":
-    create_database()
-    app.run(debug=True)
